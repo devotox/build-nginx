@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-
+	
 # names of latest versions of each package
 export VERSION_PCRE=pcre-8.38
 export VERSION_OPENSSL=openssl-1.0.2f
@@ -15,6 +15,7 @@ today=$(date +"%Y-%m-%d")
 
 # clean out any files from previous runs of this script
 rm -rf build
+rm -rf /etc/nginx-$today
 rm -rf /etc/nginx-default
 mkdir build
 
@@ -47,8 +48,10 @@ make clean
 && make \
 && make install_sw
 
-# rename the existing /etc/nginx directory so it's saved as a back-up
-mv /etc/nginx /etc/nginx-$today
+# rename the existing /etc/nginx directory so it's saved as a back-up - if it exists
+if [ -d "/etc/nginx" ]; then
+  mv /etc/nginx /etc/nginx-$today
+fi
 
 # build nginx, with various modules included/excluded
 cd $BPATH/$VERSION_NGINX
@@ -76,14 +79,21 @@ mkdir -p $BPATH/nginx
 --with-http_flv_module \
 && make && make install
 
-# rename the compiled 'default' /etc/nginx directory so its accessible as a reference to the new nginx defaults
-mv /etc/nginx /etc/nginx-default
+# copy the compiled 'default' /etc/nginx directory so its accessible as a reference to the new nginx defaults
+if [ -d "/etc/nginx-$today" ]; then
+  mv /etc/nginx /etc/nginx-default
+else
+  mkdir /etc/nginx-default
+  cp -r /etc/nginx /etc/nginx-default
+fi
 
-# now restore the previous version of /etc/nginx to /etc/nginx so the old settings are kept
-mv /etc/nginx-$today /etc/nginx
+# now restore the previous version of /etc/nginx to /etc/nginx so the old settings are kept -if it exists
+if [ -d "/etc/nginx-$today" ]; then
+  mv /etc/nginx-$today /etc/nginx
+fi
 
 echo "All done.";
-echo "This build has not edited your existing /etc/nginx directory.";
+echo "This build has not edited your existing /etc/nginx directory if it existed.";
 echo "If things aren't working now you may need to refer to the";
 echo "configuration files the new nginx ships with as defaults,";
 echo "which are available at /etc/nginx-default";

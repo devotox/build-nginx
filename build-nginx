@@ -2,8 +2,8 @@
 	
 # names of latest versions of each package
 export VERSION_PCRE=pcre-8.38
-export VERSION_OPENSSL=openssl-1.0.2f
-export VERSION_NGINX=nginx-1.9.10
+export VERSION_OPENSSL=openssl-1.0.2h
+export VERSION_NGINX=nginx-1.9.15
 
 # URLs to the source directories
 export SOURCE_OPENSSL=https://www.openssl.org/source/

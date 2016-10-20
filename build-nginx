@@ -22,7 +22,6 @@ mkdir build
 # ensure that we have the required software to compile our own nginx
 apt-get -y install curl wget build-essential
 
-
 # grab the source files
 wget -P ./build $SOURCE_PCRE$VERSION_PCRE.tar.gz
 wget -P ./build $SOURCE_NGINX$VERSION_NGINX.tar.gz
